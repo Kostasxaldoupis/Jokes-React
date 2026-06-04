@@ -1,0 +1,764 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&family=Share+Tech+Mono&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app.teletext {
+  --bg: #000;
+  --panel: #000;
+  --border: #fff;
+  --accent: #ff0;
+  --setup-c: #0ff;
+  --punch-c: #0f0;
+  --punch-b: #001a00;
+  --punch-br: #0f0;
+  --dim: #888;
+  --label-c: #0f0;
+  --redact: #003300;
+  --font: "VT323", monospace;
+  --fsize: 22px;
+  --tag-bg: #00c;
+  --tag-c: #ff0;
+  --status-c: #ff0;
+}
+
+.app.terminal {
+  --bg: #0a0a0a;
+  --panel: #0f0f0f;
+  --border: #1c1c1c;
+  --accent: #39ff14;
+  --setup-c: #e0e0e0;
+  --punch-c: #ff9955;
+  --punch-b: #0a0a0a;
+  --punch-br: #ff6b00;
+  --dim: #1a7a06;
+  --label-c: #1a7a06;
+  --redact: #1c1c1c;
+  --font: "Share Tech Mono", monospace;
+  --fsize: 15px;
+  --tag-bg: #39ff14;
+  --tag-c: #000;
+  --status-c: #39ff14;
+}
+
+.app {
+  background: var(--bg);
+  color: var(--accent);
+  font-family: var(--font);
+  font-size: var(--fsize);
+  min-height: 100vh;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+/* ── THEME BAR ── */
+.theme-bar {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  border-bottom: 1px solid #222;
+}
+
+.theme-btn {
+  font-family: var(--font);
+  font-size: var(--fsize);
+  padding: 4px 22px;
+  cursor: pointer;
+  border: 1px solid #444;
+  background: transparent;
+  color: #555;
+  letter-spacing: 2px;
+  transition: all 0.15s;
+}
+
+.theme-btn:first-child {
+  border-right: none;
+}
+
+.theme-btn.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+
+/* ── SCREEN ── */
+.screen {
+  max-width: 660px;
+  margin: 0 auto;
+  min-height: calc(100vh - 43px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── TELETEXT HEADER ── */
+.tt-topbar {
+  background: #fff;
+  color: #000;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 2px 10px;
+  font-size: 26px;
+  letter-spacing: 1px;
+}
+.t-title {
+  font-size: 28px;
+  letter-spacing: 3px;
+}
+.t-clock {
+  text-align: right;
+}
+
+.stripe {
+  display: flex;
+  height: 14px;
+}
+.stripe span {
+  flex: 1;
+}
+
+.tt-subbar {
+  background: #00c;
+  color: #ff0;
+  padding: 3px 10px;
+  font-size: 20px;
+  letter-spacing: 1px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ── TERMINAL HEADER ── */
+.tm-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1c1c1c;
+  padding: 16px 16px 10px;
+}
+.tm-logo {
+  font-size: 22px;
+  letter-spacing: 4px;
+  color: #39ff14;
+}
+.tm-logo span {
+  color: #fff;
+}
+.tm-meta {
+  color: #1a7a06;
+  font-size: 13px;
+  text-align: right;
+  line-height: 1.6;
+}
+
+/* ── SHOW/HIDE by theme ── */
+
+/* hide everything by default */
+.tt-topbar,
+.stripe,
+.tt-subbar,
+.tt-footer {
+  display: none;
+}
+.tm-topbar,
+.tm-stats {
+  display: none;
+}
+
+/* teletext — show teletext elements */
+.app.teletext .tt-topbar {
+  display: grid;
+}
+.app.teletext .stripe {
+  display: flex;
+}
+.app.teletext .tt-subbar {
+  display: flex;
+}
+.app.teletext .tt-footer {
+  display: flex;
+}
+.app.teletext .tm-topbar,
+.app.teletext .tm-stats {
+  display: none;
+}
+
+/* terminal — show terminal elements */
+.app.terminal .tm-topbar {
+  display: flex;
+}
+.app.terminal .tm-stats {
+  display: flex;
+}
+.app.terminal .tt-topbar,
+.app.terminal .stripe,
+.app.terminal .tt-subbar,
+.app.terminal .tt-footer,
+.app.terminal .status-line {
+  display: none;
+}
+
+/* ── CONTENT ── */
+.content {
+  flex: 1;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ── LOG LINE ── */
+.log-line {
+  color: var(--dim);
+  font-size: 13px;
+  min-height: 18px;
+  letter-spacing: 0.5px;
+}
+.log-line::before {
+  content: "$ ";
+  color: var(--accent);
+}
+
+/* ── JOKE BOX ── */
+.joke-box {
+  border: 2px solid var(--border);
+  padding: 16px;
+  min-height: 110px;
+  position: relative;
+  background: var(--panel);
+}
+
+.app.terminal .joke-box {
+  border-width: 1px;
+  border-left: 3px solid var(--accent);
+}
+
+.box-label {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--label-c);
+  margin-bottom: 8px;
+}
+
+.app.teletext .box-label {
+  position: absolute;
+  top: -13px;
+  left: 10px;
+  background: var(--bg);
+  padding: 0 6px;
+  font-size: 18px;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.type-tag {
+  display: inline-block;
+  font-size: 13px;
+  letter-spacing: 2px;
+  background: var(--tag-bg);
+  color: var(--tag-c);
+  padding: 1px 8px;
+}
+
+.app.teletext .type-tag {
+  font-size: 18px;
+}
+.type-tag.source {
+  opacity: 0.6;
+}
+
+.setup-text {
+  color: var(--setup-c);
+  font-size: 24px;
+  line-height: 1.4;
+  min-height: 52px;
+}
+
+.app.terminal .setup-text {
+  font-size: 18px;
+}
+
+/* ── PUNCHLINE BOX ── */
+.punch-box {
+  border: 2px solid var(--punch-br);
+  padding: 16px;
+  min-height: 80px;
+  position: relative;
+  background: var(--punch-b);
+}
+
+.app.terminal .punch-box {
+  border-width: 1px;
+  border-left: 3px solid var(--punch-br);
+  background: var(--panel);
+}
+
+.punch-label {
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: var(--label-c);
+  margin-bottom: 8px;
+}
+
+.app.teletext .punch-label {
+  position: absolute;
+  top: -13px;
+  left: 10px;
+  background: var(--punch-b);
+  padding: 0 6px;
+  font-size: 18px;
+}
+
+.punch-text {
+  font-size: 24px;
+  line-height: 1.4;
+  min-height: 44px;
+  color: var(--punch-c);
+}
+
+.app.terminal .punch-text {
+  font-size: 18px;
+}
+
+.redacted {
+  color: var(--redact);
+  background: var(--redact);
+  user-select: none;
+}
+
+/* ── STATUS ── */
+.status-line {
+  color: var(--status-c);
+  font-size: 15px;
+  min-height: 20px;
+  letter-spacing: 1px;
+}
+
+/* ── TYPE SELECTOR ── */
+.type-selector {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.type-pill {
+  font-family: var(--font);
+  font-size: 14px;
+  padding: 3px 14px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--dim);
+  letter-spacing: 1px;
+  transition: all 0.1s;
+}
+
+.type-pill:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.type-pill.active {
+  background: var(--accent);
+  color: #000;
+  border-color: var(--accent);
+}
+.app.teletext .type-pill {
+  font-size: 18px;
+}
+
+/* Status indicators */
+.shortcuts-hint {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: rgba(0, 255, 157, 0.1);
+  border: 1px solid var(--border-c, rgba(0, 255, 157, 0.3));
+  padding: 0.5rem 1rem;
+  margin: 0.5rem auto;
+  max-width: 600px;
+  font-family: monospace;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+  border-radius: 4px;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 1rem;
+}
+
+.online-status {
+  font-weight: bold;
+}
+
+.online-status.online {
+  color: #00ff9d;
+}
+
+.online-status.offline {
+  color: #ff6b6b;
+}
+
+.shortcuts {
+  color: var(--text-dim, rgba(0, 255, 157, 0.7));
+}
+
+/* Teletext theme */
+.app.teletext .shortcuts-hint {
+  background: #000;
+  border-color: #ffff00;
+}
+
+.app.teletext .online-status.online {
+  color: #00ff00;
+}
+
+.app.teletext .online-status.offline {
+  color: #ff0000;
+}
+
+/* Terminal theme */
+.app.terminal .shortcuts-hint {
+  background: #0a0e1a;
+  border-color: #00ff9d;
+}
+
+/* ── BUTTONS ── */
+.btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-fetch,
+.btn-reveal {
+  font-family: var(--font);
+  font-size: var(--fsize);
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.1s;
+}
+
+.app.teletext .btn-fetch {
+  background: #ff0;
+  color: #000;
+  border: none;
+  padding: 6px 20px;
+}
+.app.teletext .btn-reveal {
+  background: #0f0;
+  color: #000;
+  border: none;
+  padding: 6px 20px;
+}
+
+.app.terminal .btn-fetch {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  padding: 7px 20px;
+}
+.app.terminal .btn-fetch:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+.app.terminal .btn-reveal {
+  background: transparent;
+  color: var(--punch-br);
+  border: 1px solid var(--punch-br);
+  padding: 7px 20px;
+}
+.app.terminal .btn-reveal:hover {
+  background: var(--punch-br);
+  color: #000;
+}
+
+button:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+/* ── FOOTER ── */
+.tt-footer {
+  background: #00c;
+  padding: 4px 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+.tt-footer span {
+  color: #fff;
+}
+.tt-footer .hint {
+  color: #ff0;
+}
+
+.tm-stats {
+  border-top: 1px solid #1c1c1c;
+  padding: 10px 14px;
+  display: flex;
+  gap: 24px;
+  font-size: 12px;
+  color: #1a7a06;
+  letter-spacing: 1px;
+}
+.tm-stats b {
+  color: #39ff14;
+}
+
+/* ── BLINK ── */
+.blink {
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ── SCANLINES ── */
+.app::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.07) 3px,
+    rgba(0, 0, 0, 0.07) 4px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ============================================ */
+/* PWA PROMPTS - FIXED STYLES                  */
+/* ============================================ */
+
+/* Container for both prompts to avoid overlap */
+.pwa-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.pwa-update-prompt,
+.pwa-install-prompt {
+  pointer-events: auto;
+}
+
+/* PWA Update Prompt - Terminal Theme */
+.pwa-update-prompt {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #0a0e1a;
+  border: 2px solid #00ff9d;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  backdrop-filter: blur(4px);
+}
+
+.pwa-update-prompt span {
+  color: #00ff9d;
+}
+
+.pwa-update-prompt button {
+  background: #00ff9d;
+  color: #0a0e1a;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: bold;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.pwa-update-prompt button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(0, 255, 157, 0.5);
+}
+
+.pwa-update-prompt button:last-child {
+  background: transparent;
+  color: #00ff9d;
+  border: 1px solid #00ff9d;
+}
+
+.pwa-update-prompt button:last-child:hover {
+  background: rgba(0, 255, 157, 0.1);
+}
+
+/* PWA Install Prompt - Terminal Theme */
+.pwa-install-prompt {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background: #0a0e1a;
+  border: 2px solid #ffd93d;
+  padding: 0.75rem 1.25rem;
+  border-radius: 4px;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  backdrop-filter: blur(4px);
+}
+
+.pwa-install-prompt span {
+  color: #ffd93d;
+}
+
+.pwa-install-prompt button {
+  background: #ffd93d;
+  color: #0a0e1a;
+  border: none;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  font-family: var(--font);
+  font-weight: bold;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.pwa-install-prompt button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(255, 217, 61, 0.5);
+}
+
+.pwa-install-prompt button:last-child {
+  background: transparent;
+  color: #ffd93d;
+  border: 1px solid #ffd93d;
+}
+
+.pwa-install-prompt button:last-child:hover {
+  background: rgba(255, 217, 61, 0.1);
+}
+
+/* Teletext theme overrides for PWA prompts */
+.app.teletext .pwa-update-prompt {
+  background: #000;
+  border-color: #ffff00;
+  border-width: 2px;
+  font-family: var(--font);
+}
+
+.app.teletext .pwa-update-prompt span {
+  color: #ffff00;
+}
+
+.app.teletext .pwa-update-prompt button {
+  background: #ffff00;
+  color: #000;
+  font-family: var(--font);
+}
+
+.app.teletext .pwa-update-prompt button:last-child {
+  background: transparent;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+}
+
+.app.teletext .pwa-update-prompt button:last-child:hover {
+  background: rgba(255, 255, 0, 0.1);
+}
+
+.app.teletext .pwa-install-prompt {
+  background: #000;
+  border-color: #ffff00;
+  border-width: 2px;
+  font-family: var(--font);
+}
+
+.app.teletext .pwa-install-prompt span {
+  color: #ffff00;
+}
+
+.app.teletext .pwa-install-prompt button {
+  background: #ffff00;
+  color: #000;
+  font-family: var(--font);
+}
+
+.app.teletext .pwa-install-prompt button:last-child {
+  background: transparent;
+  color: #ffff00;
+  border: 1px solid #ffff00;
+}
+
+.app.teletext .pwa-install-prompt button:last-child:hover {
+  background: rgba(255, 255, 0, 0.1);
+}
+
+/* Better touch targets for mobile */
+button,
+.category-btn,
+.action-btn,
+.pwa-update-prompt button,
+.pwa-install-prompt button {
+  min-height: 44px;
+}
+
+/* Responsive: stack prompts on mobile */
+@media (max-width: 640px) {
+  .pwa-update-prompt,
+  .pwa-install-prompt {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .pwa-update-prompt {
+    bottom: 70px;
+  }
+  
+  .pwa-install-prompt {
+    bottom: 10px;
+  }
+  
+  .pwa-update-prompt button,
+  .pwa-install-prompt button {
+    padding: 0.2rem 0.6rem;
+    font-size: 0.7rem;
+    min-height: 36px;
+  }
+}
+
+/* Prevent pull-to-refresh on PWA */
+body {
+  overscroll-behavior: none;
+}
